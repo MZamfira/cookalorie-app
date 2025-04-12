@@ -159,7 +159,7 @@ const UserPreferencesForm = ({ onSubmit }: UserPreferencesFormProps) => {
               <Slider
                 id="budget"
                 min={5}
-                max={25}
+                max={50}
                 step={1}
                 value={[budget]}
                 onValueChange={(values) => setBudget(values[0])}
