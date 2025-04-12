@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { ChefHat, Github, Lock } from 'lucide-react';
+import { ChefHat, Mail, Lock } from 'lucide-react';
 
 const AdminLogin = () => {
   const { isAuthenticated, isWhitelisted, login, user, isLoading } = useAuth();
@@ -22,7 +22,7 @@ const AdminLogin = () => {
       toast({
         variant: 'destructive',
         title: 'Acces refuzat',
-        description: `Utilizatorul "${user?.login}" nu este pe lista de administratori permisi.`,
+        description: `Adresa de email "${user?.email}" nu este pe lista de administratori permisi.`,
       });
     }
   }, [isAuthenticated, isWhitelisted, navigate, toast, user, isLoading]);
@@ -42,14 +42,14 @@ const AdminLogin = () => {
             <Lock className="h-10 w-10 text-recipe-primary mx-auto mb-3" />
             <h1 className="text-2xl font-display font-bold">Acces Administrator</h1>
             <p className="text-muted-foreground mt-1">
-              Autentifică-te cu GitHub pentru a accesa panoul de administrare
+              Autentifică-te cu Google pentru a accesa panoul de administrare
             </p>
           </div>
           
           <div className="space-y-4">
             {isAuthenticated && !isWhitelisted && (
               <div className="p-3 bg-destructive/10 text-destructive rounded text-sm">
-                Contul tău GitHub nu are permisiune de administrator.
+                Contul tău Google nu are permisiune de administrator.
               </div>
             )}
             
@@ -58,8 +58,8 @@ const AdminLogin = () => {
               onClick={login}
               disabled={isLoading}
             >
-              <Github className="mr-2 h-4 w-4" />
-              {isAuthenticated ? 'Schimbă contul GitHub' : 'Conectare cu GitHub'}
+              <Mail className="mr-2 h-4 w-4" />
+              {isAuthenticated ? 'Schimbă contul Google' : 'Conectare cu Google'}
             </Button>
             
             <div className="text-center mt-6">

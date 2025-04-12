@@ -38,7 +38,7 @@ const Admin = () => {
               {user && (
                 <div className="flex items-center gap-2 bg-muted px-3 py-1 rounded-full text-sm">
                   <User className="h-3 w-3" />
-                  <span>{user.login}</span>
+                  <span>{user.email}</span>
                 </div>
               )}
               <Button variant="outline" size="sm" onClick={logout}>
