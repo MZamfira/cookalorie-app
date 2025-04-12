@@ -1,5 +1,5 @@
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,36 @@ const AdminLogin = () => {
   const { isAuthenticated, isWhitelisted, login, user, isLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const googleButtonRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Render Google Sign-In button when available
+    const renderGoogleButton = () => {
+      if (window.google?.accounts?.id && googleButtonRef.current) {
+        window.google.accounts.id.renderButton(googleButtonRef.current, {
+          theme: 'outline',
+          size: 'large',
+          type: 'standard',
+          text: 'signin_with',
+          shape: 'rectangular',
+          logo_alignment: 'left',
+          width: '280',
+        });
+      }
+    };
+
+    // Retry rendering the button when Google API is loaded
+    const intervalId = setInterval(() => {
+      if (window.google?.accounts?.id) {
+        renderGoogleButton();
+        clearInterval(intervalId);
+      }
+    }, 300);
+
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [isAuthenticated]);
 
   useEffect(() => {
     if (isAuthenticated && isWhitelisted) {
@@ -53,14 +83,25 @@ const AdminLogin = () => {
               </div>
             )}
             
-            <Button 
-              className="w-full" 
-              onClick={login}
-              disabled={isLoading}
-            >
-              <Mail className="mr-2 h-4 w-4" />
-              {isAuthenticated ? 'Schimbă contul Google' : 'Conectare cu Google'}
-            </Button>
+            {/* Native Google Sign-In button */}
+            <div className="flex justify-center mb-4">
+              <div ref={googleButtonRef}></div>
+            </div>
+            
+            {/* Custom login button as fallback */}
+            {isLoading ? (
+              <Button className="w-full" disabled>
+                Se încarcă...
+              </Button>
+            ) : (
+              <Button 
+                className="w-full" 
+                onClick={login}
+              >
+                <Mail className="mr-2 h-4 w-4" />
+                {isAuthenticated ? 'Schimbă contul Google' : 'Conectare cu Google'}
+              </Button>
+            )}
             
             <div className="text-center mt-6">
               <Button variant="link" onClick={() => navigate('/')}>
