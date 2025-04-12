@@ -21,7 +21,7 @@ import {
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Checkbox } from '@/components/ui/checkbox';
-import { X, MapPin, Flame, DollarSign, CheckCircle } from 'lucide-react';
+import { X, MapPin, Flame, DollarSign, CheckCircle, Plus } from 'lucide-react';
 import { UserPreferences } from '@/types/recipe';
 
 interface UserPreferencesFormProps {
@@ -40,6 +40,8 @@ const UserPreferencesForm = ({ onSubmit }: UserPreferencesFormProps) => {
   const [dietaryRestrictions, setDietaryRestrictions] = useState<string[]>([]);
   const [excludedIngredient, setExcludedIngredient] = useState('');
   const [excludedIngredients, setExcludedIngredients] = useState<string[]>([]);
+  const [includedIngredient, setIncludedIngredient] = useState('');
+  const [includedIngredients, setIncludedIngredients] = useState<string[]>([]);
 
   const handleDietaryToggle = (value: string) => {
     setDietaryRestrictions(current => 
@@ -60,6 +62,17 @@ const UserPreferencesForm = ({ onSubmit }: UserPreferencesFormProps) => {
     setExcludedIngredients(excludedIngredients.filter(item => item !== ingredient));
   };
 
+  const addIncludedIngredient = () => {
+    if (includedIngredient.trim() !== '' && !includedIngredients.includes(includedIngredient.trim())) {
+      setIncludedIngredients([...includedIngredients, includedIngredient.trim()]);
+      setIncludedIngredient('');
+    }
+  };
+
+  const removeIncludedIngredient = (ingredient: string) => {
+    setIncludedIngredients(includedIngredients.filter(item => item !== ingredient));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit({
@@ -67,7 +80,8 @@ const UserPreferencesForm = ({ onSubmit }: UserPreferencesFormProps) => {
       dietaryRestrictions,
       calorieTarget,
       budget,
-      excludedIngredients
+      excludedIngredients,
+      includedIngredients
     });
   };
 
@@ -76,7 +90,7 @@ const UserPreferencesForm = ({ onSubmit }: UserPreferencesFormProps) => {
       navigator.geolocation.getCurrentPosition(
         (position) => {
           // In a real app, we'd convert coordinates to location name via geocoding API
-          setLocation("Current Location");
+          setLocation("Locația curentă");
         },
         (error) => {
           console.error("Error getting location:", error);
@@ -88,19 +102,19 @@ const UserPreferencesForm = ({ onSubmit }: UserPreferencesFormProps) => {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Recipe Preferences</CardTitle>
+        <CardTitle>Preferințe rețete</CardTitle>
         <CardDescription>
-          Customize your recipe recommendations based on your needs and local prices.
+          Personalizează recomandările rețetelor în funcție de nevoile tale și prețurile locale.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="location">Your Location</Label>
+            <Label htmlFor="location">Locația ta</Label>
             <div className="flex gap-2">
               <Input
                 id="location"
-                placeholder="Enter your city or zip code"
+                placeholder="Introdu orașul sau codul poștal"
                 value={location}
                 onChange={(e) => setLocation(e.target.value)}
                 className="flex-1"
@@ -112,14 +126,14 @@ const UserPreferencesForm = ({ onSubmit }: UserPreferencesFormProps) => {
                 className="flex gap-1 items-center"
               >
                 <MapPin className="h-4 w-4" />
-                <span className="hidden sm:block">Use Current</span>
+                <span className="hidden sm:block">Folosește actuală</span>
               </Button>
             </div>
           </div>
 
           <div className="space-y-2">
             <div className="flex justify-between">
-              <Label htmlFor="calorie-target">Calorie Target</Label>
+              <Label htmlFor="calorie-target">Țintă calorii</Label>
               <span className="text-sm text-muted-foreground">{calorieTarget} kcal</span>
             </div>
             <div className="flex items-center gap-4">
@@ -137,8 +151,8 @@ const UserPreferencesForm = ({ onSubmit }: UserPreferencesFormProps) => {
 
           <div className="space-y-2">
             <div className="flex justify-between">
-              <Label htmlFor="budget">Budget per Meal</Label>
-              <span className="text-sm text-muted-foreground">${budget.toFixed(2)}</span>
+              <Label htmlFor="budget">Buget per masă</Label>
+              <span className="text-sm text-muted-foreground">{budget.toFixed(2)} RON</span>
             </div>
             <div className="flex items-center gap-4">
               <DollarSign className="h-5 w-5 text-recipe-price" />
@@ -154,7 +168,7 @@ const UserPreferencesForm = ({ onSubmit }: UserPreferencesFormProps) => {
           </div>
 
           <div className="space-y-3">
-            <Label>Dietary Restrictions</Label>
+            <Label>Restricții alimentare</Label>
             <div className="flex flex-wrap gap-2">
               {dietaryRestrictionOptions.map((diet) => (
                 <Badge 
@@ -173,10 +187,41 @@ const UserPreferencesForm = ({ onSubmit }: UserPreferencesFormProps) => {
           </div>
 
           <div className="space-y-3">
-            <Label>Excluded Ingredients</Label>
+            <Label>Ingrediente disponibile acasă</Label>
             <div className="flex gap-2">
               <Input
-                placeholder="Enter ingredient to exclude"
+                placeholder="Introdu ingredientele pe care le ai deja"
+                value={includedIngredient}
+                onChange={(e) => setIncludedIngredient(e.target.value)}
+                className="flex-1"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addIncludedIngredient();
+                  }
+                }}
+              />
+              <Button type="button" onClick={addIncludedIngredient}>Adaugă</Button>
+            </div>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {includedIngredients.map((ingredient) => (
+                <Badge key={ingredient} variant="secondary" className="flex items-center gap-1 bg-green-100">
+                  <Plus className="h-3 w-3" />
+                  {ingredient}
+                  <X 
+                    className="h-3 w-3 cursor-pointer ml-1" 
+                    onClick={() => removeIncludedIngredient(ingredient)}
+                  />
+                </Badge>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <Label>Ingrediente de exclus</Label>
+            <div className="flex gap-2">
+              <Input
+                placeholder="Introdu ingredientele de exclus"
                 value={excludedIngredient}
                 onChange={(e) => setExcludedIngredient(e.target.value)}
                 className="flex-1"
@@ -187,7 +232,7 @@ const UserPreferencesForm = ({ onSubmit }: UserPreferencesFormProps) => {
                   }
                 }}
               />
-              <Button type="button" onClick={addExcludedIngredient}>Add</Button>
+              <Button type="button" onClick={addExcludedIngredient}>Adaugă</Button>
             </div>
             <div className="flex flex-wrap gap-2 mt-2">
               {excludedIngredients.map((ingredient) => (
@@ -204,7 +249,7 @@ const UserPreferencesForm = ({ onSubmit }: UserPreferencesFormProps) => {
         </form>
       </CardContent>
       <CardFooter>
-        <Button onClick={handleSubmit} className="w-full">Generate Recipes</Button>
+        <Button onClick={handleSubmit} className="w-full">Generează rețete</Button>
       </CardFooter>
     </Card>
   );

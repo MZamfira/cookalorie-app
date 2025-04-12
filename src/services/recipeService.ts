@@ -25,6 +25,11 @@ export const fetchRecipes = async (preferences: UserPreferences, apiKey: string)
       queryParams.append("excludeIngredients", preferences.excludedIngredients.join(","));
     }
     
+    // Add included ingredients
+    if (preferences.includedIngredients.length > 0) {
+      queryParams.append("includeIngredients", preferences.includedIngredients.join(","));
+    }
+    
     // Add max calories if specified
     if (preferences.calorieTarget) {
       queryParams.append("maxCalories", preferences.calorieTarget.toString());
@@ -81,7 +86,7 @@ const transformApiResponseToRecipes = (
       (ingredient: any) => ({
         name: ingredient.name || "Unknown ingredient",
         amount: ingredient.amount?.toString() || "0",
-        price: ingredient.estimatedCost?.value / 100 || 0.99, // Convert cents to dollars or use placeholder
+        price: ingredient.estimatedCost?.value / 100 || 0.99, // Convert cents to RON
         unit: ingredient.unit || "",
       })
     ) || [];
@@ -157,10 +162,10 @@ export const adjustPricesByLocation = (
   // In a real app, you would call a grocery store API to get local prices
   
   const locationFactors: {[key: string]: number} = {
-    "New York": 1.2,
-    "San Francisco": 1.3,
-    "Chicago": 1.1,
-    "Austin": 0.9,
+    "București": 1.2,
+    "Cluj-Napoca": 1.15,
+    "Timișoara": 1.05,
+    "Iași": 0.95,
     "Default": 1.0
   };
 

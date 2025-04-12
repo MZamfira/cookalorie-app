@@ -139,7 +139,7 @@ const RecipeGenerator = () => {
               {preferences && (
                 <p className="text-muted-foreground">
                   {preferences.location && `Pentru ${preferences.location} • `}
-                  {preferences.calorieTarget} kcal • ${preferences.budget.toFixed(2)} buget
+                  {preferences.calorieTarget} kcal • {preferences.budget.toFixed(2)} RON buget
                 </p>
               )}
               {error && (

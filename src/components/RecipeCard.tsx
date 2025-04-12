@@ -58,7 +58,7 @@ const RecipeCard = ({ recipe, onClick }: RecipeCardProps) => {
           </div>
           <div className="flex items-center gap-1 text-recipe-price">
             <DollarSign className="h-4 w-4" />
-            <span>${pricePerServing.toFixed(2)}/porție</span>
+            <span>{pricePerServing.toFixed(2)} RON/porție</span>
           </div>
         </div>
       </CardContent>

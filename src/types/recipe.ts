@@ -37,4 +37,5 @@ export interface UserPreferences {
   calorieTarget: number;
   budget: number;
   excludedIngredients: string[];
+  includedIngredients: string[];
 }

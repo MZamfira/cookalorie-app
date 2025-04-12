@@ -74,29 +74,29 @@ const RecipeDetail = ({ recipe, isOpen, onClose }: RecipeDetailProps) => {
             <div className="flex flex-col items-center p-3 bg-muted rounded-md">
               <Clock className="h-5 w-5 mb-1" />
               <span className="text-sm font-medium">{totalTime} mins</span>
-              <span className="text-xs text-muted-foreground">Total Time</span>
+              <span className="text-xs text-muted-foreground">Timp total</span>
             </div>
             <div className="flex flex-col items-center p-3 bg-muted rounded-md">
               <Users className="h-5 w-5 mb-1" />
               <span className="text-sm font-medium">{servings}</span>
-              <span className="text-xs text-muted-foreground">Servings</span>
+              <span className="text-xs text-muted-foreground">Porții</span>
             </div>
             <div className="flex flex-col items-center p-3 bg-muted rounded-md">
               <Flame className="h-5 w-5 mb-1 text-recipe-calories" />
               <span className="text-sm font-medium">{nutritionInfo.calories}</span>
-              <span className="text-xs text-muted-foreground">Calories/Serving</span>
+              <span className="text-xs text-muted-foreground">Calorii/Porție</span>
             </div>
             <div className="flex flex-col items-center p-3 bg-muted rounded-md">
               <DollarSign className="h-5 w-5 mb-1 text-recipe-price" />
-              <span className="text-sm font-medium">${pricePerServing.toFixed(2)}</span>
-              <span className="text-xs text-muted-foreground">Cost/Serving</span>
+              <span className="text-sm font-medium">{pricePerServing.toFixed(2)} RON</span>
+              <span className="text-xs text-muted-foreground">Cost/Porție</span>
             </div>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
             <div>
               <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
-                <ChefHat className="h-5 w-5" /> Ingredients
+                <ChefHat className="h-5 w-5" /> Ingrediente
               </h3>
               <ul className="ingredients-list space-y-1">
                 {ingredients.map((ingredient, index) => (
@@ -104,19 +104,19 @@ const RecipeDetail = ({ recipe, isOpen, onClose }: RecipeDetailProps) => {
                     <span>
                       {ingredient.amount} {ingredient.unit} {ingredient.name}
                     </span>
-                    <span className="text-recipe-price">${ingredient.price.toFixed(2)}</span>
+                    <span className="text-recipe-price">{ingredient.price.toFixed(2)} RON</span>
                   </li>
                 ))}
               </ul>
               <div className="mt-3 pt-3 border-t flex justify-between font-medium">
-                <span>Total Cost:</span>
-                <span className="text-recipe-price">${totalPrice.toFixed(2)}</span>
+                <span>Cost total:</span>
+                <span className="text-recipe-price">{totalPrice.toFixed(2)} RON</span>
               </div>
             </div>
 
             <div className="space-y-5">
               <div>
-                <h3 className="text-lg font-semibold mb-3">Instructions</h3>
+                <h3 className="text-lg font-semibold mb-3">Instrucțiuni</h3>
                 <ol className="space-y-3">
                   {instructions.map((instruction, index) => (
                     <li key={index} className="flex gap-2">
@@ -130,33 +130,33 @@ const RecipeDetail = ({ recipe, isOpen, onClose }: RecipeDetailProps) => {
               </div>
 
               <div>
-                <h3 className="text-lg font-semibold mb-3">Nutrition Information</h3>
+                <h3 className="text-lg font-semibold mb-3">Informații nutriționale</h3>
                 <div className="nutrition-label">
                   <div className="nutrition-row font-medium">
-                    <span>Nutrition Facts (per serving)</span>
+                    <span>Valori nutriționale (per porție)</span>
                   </div>
                   <div className="nutrition-row">
-                    <span>Calories</span>
+                    <span>Calorii</span>
                     <span>{nutritionInfo.calories}</span>
                   </div>
                   <div className="nutrition-row">
-                    <span>Protein</span>
+                    <span>Proteine</span>
                     <span>{nutritionInfo.protein}g</span>
                   </div>
                   <div className="nutrition-row">
-                    <span>Carbs</span>
+                    <span>Carbohidrați</span>
                     <span>{nutritionInfo.carbs}g</span>
                   </div>
                   <div className="nutrition-row">
-                    <span>Fat</span>
+                    <span>Grăsimi</span>
                     <span>{nutritionInfo.fat}g</span>
                   </div>
                   <div className="nutrition-row">
-                    <span>Fiber</span>
+                    <span>Fibre</span>
                     <span>{nutritionInfo.fiber}g</span>
                   </div>
                   <div className="nutrition-row">
-                    <span>Sugar</span>
+                    <span>Zahăr</span>
                     <span>{nutritionInfo.sugar}g</span>
                   </div>
                 </div>
