@@ -3,15 +3,18 @@ import React, { createContext, useState, useContext } from 'react';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: SimpleUser | null;
+  user: User | null;
   isLoading: boolean;
   login: (username: string, password: string) => boolean;
+  adminLogin: (username: string, password: string) => boolean;
   logout: () => void;
   isWhitelisted: boolean;
+  isAdmin: boolean;
 }
 
-interface SimpleUser {
+interface User {
   username: string;
+  isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -19,14 +22,16 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: false,
   login: () => false,
+  adminLogin: () => false,
   logout: () => {},
   isWhitelisted: false,
+  isAdmin: false,
 });
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<SimpleUser | null>(() => {
+  const [user, setUser] = useState<User | null>(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {
       try {
@@ -39,17 +44,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  // Simple login logic with hardcoded credentials
+  // Login pentru utilizatori normali
   const login = (username: string, password: string) => {
     setIsLoading(true);
     
-    // Check if credentials match
+    // Verificăm credențialele (simplificat)
+    const isValid = username.length >= 3 && password.length >= 3;
+    
+    if (isValid) {
+      const userData = { username, isAdmin: false };
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
+    }
+    
+    setIsLoading(false);
+    return isValid;
+  };
+
+  // Login pentru admin
+  const adminLogin = (username: string, password: string) => {
+    setIsLoading(true);
+    
+    // Verificăm credențialele de admin
     const isValid = username === 'admin' && password === 'admin';
     
     if (isValid) {
-      const simpleUser = { username };
-      localStorage.setItem('user', JSON.stringify(simpleUser));
-      setUser(simpleUser);
+      const userData = { username, isAdmin: true };
+      localStorage.setItem('user', JSON.stringify(userData));
+      setUser(userData);
     }
     
     setIsLoading(false);
@@ -68,8 +90,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         user, 
         isLoading, 
         login, 
+        adminLogin,
         logout,
-        isWhitelisted: true // Since we're using simple auth, all logged-in users are considered whitelisted
+        isWhitelisted: true,
+        isAdmin: user?.isAdmin || false
       }}
     >
       {children}

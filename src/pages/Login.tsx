@@ -5,11 +5,11 @@ import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useToast } from '@/hooks/use-toast';
-import { ChefHat, Lock, User } from 'lucide-react';
+import { ChefHat, User, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const AdminLogin = () => {
-  const { isAuthenticated, isAdmin, adminLogin, isLoading } = useAuth();
+const Login = () => {
+  const { isAuthenticated, login, isLoading } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [username, setUsername] = useState('');
@@ -17,14 +17,14 @@ const AdminLogin = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (isAuthenticated && isAdmin) {
-      navigate('/admin');
+    if (isAuthenticated) {
+      navigate('/my-recipes');
       toast({
         title: 'Autentificare reușită',
-        description: 'Ai acces la panoul de administrare.',
+        description: 'Bine ai venit înapoi!',
       });
     }
-  }, [isAuthenticated, isAdmin, navigate, toast]);
+  }, [isAuthenticated, navigate, toast]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,10 +35,10 @@ const AdminLogin = () => {
       return;
     }
     
-    const success = adminLogin(username, password);
+    const success = login(username, password);
     
     if (!success) {
-      setError('Credențiale incorecte. Încearcă cu admin/admin');
+      setError('Numele de utilizator trebuie să aibă cel puțin 3 caractere și parola cel puțin 3 caractere');
     }
   };
 
@@ -54,10 +54,10 @@ const AdminLogin = () => {
       <main className="flex-1 flex items-center justify-center p-4">
         <div className="w-full max-w-md p-8 rounded-lg border bg-card text-card-foreground shadow">
           <div className="text-center mb-6">
-            <Lock className="h-10 w-10 text-recipe-primary mx-auto mb-3" />
-            <h1 className="text-2xl font-display font-bold">Acces Administrator</h1>
+            <User className="h-10 w-10 text-recipe-primary mx-auto mb-3" />
+            <h1 className="text-2xl font-display font-bold">Conectare</h1>
             <p className="text-muted-foreground mt-1">
-              Autentifică-te pentru a accesa panoul de administrare
+              Autentifică-te pentru a-ți salva rețetele preferate
             </p>
           </div>
           
@@ -77,7 +77,7 @@ const AdminLogin = () => {
                   type="text" 
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="admin" 
+                  placeholder="numele tău" 
                   className="pl-10"
                 />
               </div>
@@ -96,7 +96,7 @@ const AdminLogin = () => {
                   className="pl-10"
                 />
               </div>
-              <p className="text-xs text-muted-foreground">Utilizator: admin, Parolă: admin</p>
+              <p className="text-xs text-muted-foreground">Introdu un nume de utilizator și o parolă cu minim 3 caractere</p>
             </div>
             
             <Button 
@@ -104,11 +104,11 @@ const AdminLogin = () => {
               className="w-full" 
               disabled={isLoading}
             >
-              {isLoading ? 'Se încarcă...' : 'Autentificare'}
+              {isLoading ? 'Se încarcă...' : 'Conectare'}
             </Button>
             
             <div className="text-center mt-4 text-sm">
-              <p>Utilizator normal? <Link to="/login" className="text-recipe-primary hover:underline">Conectare utilizator</Link></p>
+              <p>Ești administrator? <Link to="/admin-login" className="text-recipe-primary hover:underline">Conectare admin</Link></p>
             </div>
             
             <div className="text-center mt-6">
@@ -129,4 +129,4 @@ const AdminLogin = () => {
   );
 };
 
-export default AdminLogin;
+export default Login;

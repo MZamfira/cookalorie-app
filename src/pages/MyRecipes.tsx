@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Header from '@/components/Header';
 import { ApiKeyProvider } from '@/context/ApiKeyContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,19 +7,28 @@ import { Book, Info } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Recipe } from '@/types/recipe';
 import RecipeCard from '@/components/RecipeCard';
 import RecipeDetail from '@/components/RecipeDetail';
+import { useAuth } from '@/context/AuthContext';
 
 const MyRecipes = () => {
   const { toast } = useToast();
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [savedRecipes, setSavedRecipes] = useState<Recipe[]>(() => {
     const saved = localStorage.getItem('savedRecipes');
     return saved ? JSON.parse(saved) : [];
   });
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [showRecipeDetail, setShowRecipeDetail] = useState(false);
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate('/login');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleRecipeClick = (recipe: Recipe) => {
     setSelectedRecipe(recipe);
@@ -40,6 +49,10 @@ const MyRecipes = () => {
       description: "Rețeta a fost ștearsă din colecția ta.",
     });
   };
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <ApiKeyProvider>
@@ -103,7 +116,7 @@ const MyRecipes = () => {
         
         <footer className="border-t py-6">
           <div className="container text-center text-sm text-muted-foreground">
-            <p>© 2025 NutriSaver. Toate drepturile rezervate.</p>
+            <p>© 2025 Cookalorie. Toate drepturile rezervate.</p>
           </div>
         </footer>
       </div>
