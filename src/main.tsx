@@ -1,7 +1,4 @@
 
-// Polyfill for global object used by some libraries
-window.global = window;
-
 import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import './index.css'

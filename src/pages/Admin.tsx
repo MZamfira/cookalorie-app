@@ -10,16 +10,16 @@ import { ChefHat, Lock, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 const Admin = () => {
-  const { isAuthenticated, isWhitelisted, user, logout } = useAuth();
+  const { isAuthenticated, user, logout } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated || !isWhitelisted) {
+    if (!isAuthenticated) {
       navigate('/admin-login');
     }
-  }, [isAuthenticated, isWhitelisted, navigate]);
+  }, [isAuthenticated, navigate]);
 
-  if (!isAuthenticated || !isWhitelisted) {
+  if (!isAuthenticated) {
     return null;
   }
 
@@ -38,7 +38,7 @@ const Admin = () => {
               {user && (
                 <div className="flex items-center gap-2 bg-muted px-3 py-1 rounded-full text-sm">
                   <User className="h-3 w-3" />
-                  <span>{user.email}</span>
+                  <span>{user.username}</span>
                 </div>
               )}
               <Button variant="outline" size="sm" onClick={logout}>
@@ -51,7 +51,7 @@ const Admin = () => {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <ChefHat className="h-5 w-5 text-recipe-primary" />
-                <CardTitle>Configurare API NutriSaver</CardTitle>
+                <CardTitle>Configurare API Cookalorie</CardTitle>
               </div>
             </CardHeader>
             <CardContent>
@@ -66,7 +66,7 @@ const Admin = () => {
         </main>
         <footer className="border-t py-6 mt-auto">
           <div className="container text-center text-sm text-muted-foreground">
-            <p>© 2025 NutriSaver. Toate drepturile rezervate.</p>
+            <p>© 2025 Cookalorie. Toate drepturile rezervate.</p>
           </div>
         </footer>
       </div>
