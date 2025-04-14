@@ -66,7 +66,7 @@ const Admin = () => {
         </main>
         <footer className="border-t py-6 mt-auto">
           <div className="container text-center text-sm text-muted-foreground">
-            <p>© 2025 NutriSaver. Toate drepturile rezervate.</p>
+            <p>© 2025 Cookalerie. Toate drepturile rezervate.</p>
           </div>
         </footer>
       </div>
